@@ -93,6 +93,19 @@ public class SplayTree {
         return successor;
     }
 
+    static boolean search(int key) {
+        Node temp = root;
+
+        while (temp != null) {
+
+            if(temp.data > key) temp = temp.left;
+            else if(temp.data < key) temp = temp.right;
+            else return true;
+        }
+
+        return false;
+    }
+
     static void rebalance(Node root) {
 
     }

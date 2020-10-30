@@ -30,13 +30,15 @@ public class DepthFirstSearch {
 
         root.right.right.right = new Node('k');
 
-        System.out.println(search('k'));
+        /*System.out.println(search('k'));
         System.out.println(search('a'));
         System.out.println(search('z'));
         System.out.println(search('d'));
         System.out.println(search('o'));
         System.out.println(search('j'));
-        System.out.println(search('e'));
+        System.out.println(search('e'));*/
+
+        search('g');
 
 
     }
@@ -46,25 +48,23 @@ public class DepthFirstSearch {
         Stack<Node> stack = new Stack<>();
         stack.push(root);
         visited.add(root);
-
-        Node temp = root;
-
+        System.out.println("");
+        System.out.print(stack.peek().data + " -> ");
         while (!stack.isEmpty()) {
+            Node temp = stack.peek();
 
-            while (temp != null) {
-                stack.push(temp);
-                visited.add(temp);
-                temp = temp.left;
-            }
-
-            if(temp.left != null) {
+            if(temp.left != null && !visited.contains(temp.left)) {
                 stack.push(temp.left);
-                temp = temp.left;
+                visited.add(temp.left);
+                System.out.print(stack.peek().data + " -> ");
+            }
+            else if(temp.right != null && !visited.contains(temp.right)) {
+                stack.push(temp.right);
+                visited.add(temp.right);
+                System.out.print(stack.peek().data + " -> ");
             }
             else {
                 temp = stack.pop();
-
-                //if(visited.contains())
             }
 
         }
