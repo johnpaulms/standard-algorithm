@@ -90,8 +90,9 @@ public class PrimsMST {
         }
 
         void decreaseKey(MinHeap mh, int newKey, int pos) {
-            mh.heapNodes[pos].key = newKey;
-            mh.trickleUp(pos);
+            int index = mh.indexes[pos];
+            mh.heapNodes[index].key = newKey;
+            mh.trickleUp(index);
         }
 
         void printSet(ResultSet[] resultSets) {
@@ -134,6 +135,7 @@ public class PrimsMST {
 
     static class MinHeap {
         HeapNode[] heapNodes = new HeapNode[1000];
+        int[] indexes = new int[1000];
         int size = 0;
 
         public MinHeap() {
@@ -141,6 +143,7 @@ public class PrimsMST {
 
         void insert(HeapNode node) {
             heapNodes[size] = node;
+            indexes[node.vertex] = size;
             trickleUp(size++);
         }
 
@@ -151,6 +154,7 @@ public class PrimsMST {
         HeapNode extractMin() {
             HeapNode node = heapNodes[0];
             heapNodes[0] = heapNodes[--size];
+            indexes[heapNodes[0].vertex] = 0;
             trickleDown(0);
             return node;
         }
@@ -165,11 +169,13 @@ public class PrimsMST {
             int parent = (pos - 1) / 2;
             while (pos > 0 && heapNodes[parent].key > bottom.key) {
                 heapNodes[pos] = heapNodes[parent];
+                indexes[heapNodes[parent].vertex] = pos;
                 pos = parent;
                 parent = (pos - 1) / 2;
             }
 
             heapNodes[pos] = bottom;
+            indexes[heapNodes[pos].vertex] = pos;
         }
 
         void trickleDown(int pos) {
@@ -188,10 +194,12 @@ public class PrimsMST {
                     smallerChild = rightChild;
                 }
                 heapNodes[pos] = heapNodes[smallerChild];
+                indexes[heapNodes[smallerChild].vertex] = pos;
                 pos = smallerChild;
             }
 
             heapNodes[pos] = top;
+            indexes[heapNodes[pos].vertex] = pos;
         }
     }
 }
