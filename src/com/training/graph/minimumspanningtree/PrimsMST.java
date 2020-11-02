@@ -38,8 +38,9 @@ public class PrimsMST {
 
         void addEge(int source, int destination, int weight) {
             Edge e = new Edge(source, destination, weight);
-
             edges[source].add(e);
+
+            e = new Edge(destination, source, weight);
             edges[destination].add(e);
         }
 
@@ -98,7 +99,7 @@ public class PrimsMST {
         void printSet(ResultSet[] resultSets) {
             int totalWeight = 0;
             System.out.println("Minimum spanning tree : ");
-            for (int i = 0; i < resultSets.length; i++) {
+            for (int i = 1; i < resultSets.length; i++) {
                 System.out.println("Edge : " + i + " - " + resultSets[i].parent + " weight : " + resultSets[i].weight);
                 totalWeight += resultSets[i].weight;
             }

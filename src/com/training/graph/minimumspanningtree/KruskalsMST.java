@@ -37,9 +37,9 @@ public class KruskalsMST {
 
         void addEdge(int source, int destination, int weight) {
             Edge e = new Edge(source, destination, weight);
-
-            edges[source].add(e);
-            edges[destination].add(e);
+            //edges[source].add(e);
+            //e = new Edge(destination, source, weight);
+            //edges[destination].add(e);
             allEdges.add(e);
         }
 
