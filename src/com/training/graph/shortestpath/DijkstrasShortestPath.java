@@ -10,6 +10,15 @@ import java.util.LinkedList;
 public class DijkstrasShortestPath {
     public static void main(String... args) {
 
+        Graph g = new Graph(6);
+        g.addEdge(0,1,4);
+        g.addEdge(0,2,3);
+        g.addEdge(1,2,1);
+        g.addEdge(1,3,2);
+        g.addEdge(2,3,4);
+        g.addEdge(3,4,2);
+        g.addEdge(4,5,6);
+        g.findShortestPath(0);
     }
 
     static class Graph {
@@ -31,16 +40,60 @@ public class DijkstrasShortestPath {
             edges[destination].add(e);
         }
 
-        void findShortestPath() {
+        void findShortestPath(int source) {
 
+            HeapNode[] heapNodes = new HeapNode[nVertex];
+            boolean[] shortestPath = new boolean[nVertex];
+
+            for (int i = 0; i < nVertex; i++) {
+                heapNodes[i] = new HeapNode(i, Integer.MAX_VALUE);
+            }
+
+            heapNodes[source].distance = 0;
+
+            MinHeap mh = new MinHeap();
+            for (int i = 0; i < nVertex; i++) {
+                mh.insert(heapNodes[i]);
+            }
+
+            while (!mh.isEmpty()) {
+                HeapNode extractedNode = mh.extractmin();
+
+                int extractedVertex = extractedNode.vertex;
+                shortestPath[extractedVertex] = true;
+
+                LinkedList<Edge> adjList = edges[extractedVertex];
+                for(int i = 0; i < adjList.size(); i++) {
+                    Edge e = adjList.get(i);
+                    int destination = e.destination;
+
+                    if(!shortestPath[destination]) {
+                        int currentKey = heapNodes[destination].distance;
+                        int newKey = heapNodes[extractedVertex].distance + e.weight;
+
+                        if(currentKey > newKey) {
+                            decreaseKey(mh, newKey, destination);
+                            heapNodes[destination].distance = newKey;
+                        }
+                    }
+                }
+            }
+
+            printShortestPath(heapNodes, source);
         }
 
         void decreaseKey(MinHeap mh, int newKey, int vertex) {
-
+            int index = mh.indexes[vertex];
+            mh.heapNodes[index].distance = newKey;
+            mh.trickleup(index);
         }
 
-        void printShortestPath() {
+        void printShortestPath(HeapNode[] heapNodes, int sourceVertex) {
+            System.out.println("Dijsktra's Algorithm : ");
 
+            for (int i = 0; i < nVertex; i++) {
+                System.out.println("Source Vertex : " + sourceVertex + " to vertex " + i + " distance : " + heapNodes[i].distance);
+            }
         }
     }
 
@@ -58,11 +111,11 @@ public class DijkstrasShortestPath {
 
     static class HeapNode {
         int vertex;
-        int key;
+        int distance;
 
-        public HeapNode(int vertex, int key) {
+        public HeapNode(int vertex, int distance) {
             this.vertex = vertex;
-            this.key = key;
+            this.distance = distance;
         }
     }
 
@@ -94,7 +147,7 @@ public class DijkstrasShortestPath {
             HeapNode bottom = heapNodes[pos];
             int parent = (pos - 1) / 2;
 
-            while (pos > 0 && heapNodes[parent].key > bottom.key) {
+            while (pos > 0 && heapNodes[parent].distance > bottom.distance) {
                 heapNodes[pos] = heapNodes[parent];
                 indexes[heapNodes[pos].vertex] = pos;
                 pos = parent;
@@ -113,7 +166,7 @@ public class DijkstrasShortestPath {
                 int leftChild = 2 * pos + 1;
                 int rightChild = leftChild + 1;
 
-                if(pos < size && heapNodes[leftChild].key < heapNodes[rightChild].key)
+                if(pos < size && heapNodes[leftChild].distance < heapNodes[rightChild].distance)
                     smallerChild = leftChild;
                 else
                     smallerChild = rightChild;
@@ -126,5 +179,7 @@ public class DijkstrasShortestPath {
             heapNodes[pos] = top;
             indexes[heapNodes[pos].vertex] = pos;
         }
+
+        boolean isEmpty() {return size == 0;}
     }
 }
