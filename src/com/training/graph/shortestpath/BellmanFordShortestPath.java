@@ -39,7 +39,7 @@ public class BellmanFordShortestPath {
 
         void addEdge(int source, int destination, int weight) {
             Edge e = new Edge(source, destination, weight);
-            edges[source].add(e);
+            //edges[source].add(e);
             allEdges.add(e);
         }
 
